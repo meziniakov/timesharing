@@ -30,7 +30,7 @@ export default function MentorPage({ data }) {
   // }, [])
   // console.log(mentor)
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>{data.name} | Time Sharing</title>
         <meta
@@ -39,21 +39,8 @@ export default function MentorPage({ data }) {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Nav />
-      <main className={styles.main}>
-        <MentorCard mentor={data} />
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          2022
-        </a>
-      </footer>
-    </div>
+      <MentorCard mentor={data} />
+    </>
   )
 }
 
