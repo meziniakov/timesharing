@@ -5,6 +5,8 @@ const mentorsSchema = new mongoose.Schema({
   name: String,
   img: String,
   job: String,
+  status: String,
+  isAdmin: Boolean,
 })
 
 module.exports =

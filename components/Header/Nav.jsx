@@ -128,24 +128,22 @@ const Nav = () => {
               >
                 {session ? (
                   <>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700"
-                      role="menuitem"
-                      tabIndex="-1"
-                      id="user-menu-item-0"
-                    >
-                      Профиль
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700"
-                      role="menuitem"
-                      tabIndex="-1"
-                      id="user-menu-item-1"
-                    >
-                      Настройки
-                    </a>
+                    <Link href={'/profile'}>
+                      <a
+                        className="block px-4 py-2 text-sm text-gray-700"
+                        role="menuitem"
+                      >
+                        Профиль
+                      </a>
+                    </Link>
+                    <Link href={'/mentor/add'}>
+                      <a
+                        className="block px-4 py-2 text-sm text-gray-700"
+                        role="menuitem"
+                      >
+                        Стать ментором
+                      </a>
+                    </Link>
                     <a
                       href="#"
                       className="block px-4 py-2 text-sm text-gray-700"
