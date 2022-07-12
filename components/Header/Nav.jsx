@@ -5,10 +5,15 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 
 const Nav = () => {
   const { data: session } = useSession()
-  const [active, setActive] = useState(false)
+  const [userMenuActive, setUserMenuActive] = useState(false)
+  const [burgerMenuActive, setBurgerMenuActive] = useState(false)
 
-  const handleClick = () => {
-    setActive(!active)
+  const handleClickUserMenu = () => {
+    setUserMenuActive(!userMenuActive)
+  }
+
+  const handleClickBurger = () => {
+    setBurgerMenuActive(!burgerMenuActive)
   }
   return (
     <nav className="bg-gray-800">
@@ -17,6 +22,7 @@ const Nav = () => {
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <button
               type="button"
+              onClick={handleClickBurger}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-controls="mobile-menu"
               aria-expanded="false"
@@ -100,7 +106,7 @@ const Nav = () => {
                   id="user-menu-button"
                   aria-expanded="true"
                   aria-haspopup="true"
-                  onClick={handleClick}
+                  onClick={handleClickUserMenu}
                 >
                   <span className="sr-only">Open user menu</span>
                   <Image
@@ -119,7 +125,7 @@ const Nav = () => {
 
               <div
                 className={`${
-                  active ? '' : 'hidden'
+                  userMenuActive ? '' : 'hidden'
                 } origin-top-right absolute right-0 mt-2 w-48 z-10 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`}
                 role="menu"
                 aria-orientation="vertical"
@@ -173,36 +179,26 @@ const Nav = () => {
         </div>
       </div>
 
-      <div className="sm:hidden" id="mobile-menu">
+      <div
+        className={`${burgerMenuActive ? '' : 'hidden'} sm:hidden`}
+        id="mobile-menu"
+      >
         <div className="px-2 pt-2 pb-3 space-y-1">
-          <a
-            href="#"
-            className="bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium"
-            aria-current="page"
-          >
-            Dashboard
-          </a>
-
-          <a
-            href="#"
-            className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Team
-          </a>
-
-          <a
-            href="#"
-            className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Projects
-          </a>
-
-          <a
-            href="#"
-            className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-          >
-            Calendar
-          </a>
+          <Link href={'/'}>
+            <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md block text-base font-medium">
+              Главная
+            </a>
+          </Link>
+          <Link href={'/'}>
+            <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md block text-base font-medium">
+              Менторы
+            </a>
+          </Link>
+          <Link href={'/about'}>
+            <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md block text-base font-medium">
+              О проекте
+            </a>
+          </Link>
         </div>
       </div>
     </nav>
