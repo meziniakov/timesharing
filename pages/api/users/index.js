@@ -12,7 +12,7 @@ const handler = async (req, res) => {
   switch (method) {
     case 'GET':
       try {
-        const users = await User.find({}).skip(41).limit(15)
+        const users = await User.find({}).skip(41)
         res.status(200).json({ success: true, data: users })
       } catch (error) {
         res.status(400).json({ success: false })
