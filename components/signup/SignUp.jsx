@@ -12,7 +12,8 @@ const SignUp = () => {
     setEmail(e.target.email.value)
     setPassword(e.target.password.value)
 
-    const res = await fetch('http://localhost:3000/api/_auth/login', {
+    const url = `${process.env.URL_API}/_auth/login`
+    const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

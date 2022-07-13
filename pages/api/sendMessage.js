@@ -6,10 +6,13 @@ const handler = async (req, res) => {
       const { telegramUserID, text, parseMode } = req.body
       console.log(telegramUserID)
       await sendNotification(telegramUserID, text, parseMode)
-      res.status(200).json({ message: 'Сообщение отправлено' })
+      res.status(200).json({ success: true, message: 'Сообщение отправлено' })
       break
     default:
-      res.status(405).end('Данный метод не поддерживается')
+      res
+        .status(405)
+        .json({ success: false, message: 'Данный метод не поддерживается' })
+      break
   }
 }
 export default handler

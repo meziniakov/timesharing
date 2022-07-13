@@ -39,7 +39,8 @@ export default function MentorPage({ data }) {
       text: 'Привет. Это тестовое сообщение со смайлом 🤪',
       parseMode: 'html',
     }
-    const res = await fetch('http://localhost:3000/api/sendMessage', {
+    const url = `${process.env.URL_API}/sendMessage`
+    const res = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
