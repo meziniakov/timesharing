@@ -69,8 +69,7 @@ export default function Home({ data }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const url = `${process.env.URL_API}/users`
-  const res = await fetch(url)
+  const res = await fetch(`http://127.0.0.1/api/users`)
   const { data } = await res.json()
   return { props: { data } }
 }
