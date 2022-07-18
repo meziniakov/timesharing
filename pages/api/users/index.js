@@ -1,8 +1,5 @@
 import dbConnect from '../../../lib/db'
-import User from '../../../models/userModel'
-import withProtect from '../../../middleware/withProtect'
-import authMiddleware from '../../../middleware/authMiddleware'
-import withRoles from '../../../middleware/withRoles'
+import User from '../../../models/User'
 
 const handler = async (req, res) => {
   const { method } = req
@@ -12,7 +9,7 @@ const handler = async (req, res) => {
   switch (method) {
     case 'GET':
       try {
-        const users = await User.find({}).skip(41)
+        const users = await User.find({})
         res.status(200).json({ success: true, data: users })
       } catch (error) {
         res.status(400).json({ success: false })
@@ -21,9 +18,7 @@ const handler = async (req, res) => {
 
     case 'POST':
       try {
-        const users = await User.create(
-          req.body
-        ) /* create a new model in the database */
+        const users = await User.create(req.body)
         res.status(201).json({ success: true, data: users })
       } catch (error) {
         res.status(400).json({ success: false })

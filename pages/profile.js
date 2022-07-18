@@ -1,20 +1,26 @@
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession, signIn, signOut, getSession } from 'next-auth/react'
 import Head from 'next/head'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import Nav from '../components/Header/Nav'
+import { useState } from 'react'
+import User from '../models/User'
 
-export default function Profile() {
+const Profile = ({ user }) => {
   const { data: session } = useSession()
-  const router = useRouter()
-  useEffect(() => {
-    if (!session) {
-      router.push('/')
-    }
-  }, [session, router])
+  const [firstname, setFirstname] = useState(null)
+  const [lastname, setLastname] = useState(null)
 
-  if (session)
+  if (session) {
+    const handleSubmit = async (e) => {
+      e.preventDefault()
+      const url = `${process.env.URL_API}/users/${user._id}`
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstname, lastname }),
+      })
+      const result = await res.json()
+      console.log(result)
+    }
     return (
       <>
         <Head>
@@ -24,22 +30,26 @@ export default function Profile() {
         </Head>
         <div className="justify-center col-span-6 sm:col-span-6">
           <div className="mt-5 md:mt-0 md:col-span-2">
-            <form action="#" method="POST">
+            <form onSubmit={(e) => handleSubmit(e)} action="#" method="POST">
               <div className="shadow overflow-hidden sm:rounded-md">
                 <div className="px-4 py-5 bg-white sm:p-6">
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="first-name"
+                        htmlFor="firstname"
                         className="block text-sm font-medium text-gray-700"
                       >
                         Имя
                       </label>
                       <input
                         type="text"
-                        name="first-name"
+                        name="firstname"
                         id="first-name"
-                        placeholder={session.user?.name?.split(' ')[0]}
+                        onChange={(e) =>
+                          e.target.value && setFirstname(e.target.value)
+                        }
+                        placeholder={user?.firstname}
+                        defaultValue={user?.firstname ? user.firstname : ''}
                         autoComplete="given-name"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
@@ -47,16 +57,20 @@ export default function Profile() {
 
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="last-name"
+                        htmlFor="lastname"
                         className="block text-sm font-medium text-gray-700"
                       >
                         Фамилия
                       </label>
                       <input
                         type="text"
-                        name="last-name"
-                        placeholder={session.user?.name?.split(' ')[1]}
+                        name="lastname"
+                        placeholder={user?.lastname}
                         id="last-name"
+                        onChange={(e) =>
+                          e.target.value && setLastname(e.target.value)
+                        }
+                        defaultValue={user?.lastname ? user.lastname : ''}
                         autoComplete="family-name"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                       />
@@ -72,7 +86,7 @@ export default function Profile() {
                       <input
                         type="text"
                         name="email-address"
-                        placeholder={session.user?.email}
+                        placeholder={user?.email}
                         id="email-address"
                         autoComplete="email"
                         className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -115,7 +129,7 @@ export default function Profile() {
                           rows={3}
                           className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
                           placeholder="you@example.com"
-                          defaultValue={''}
+                          defaultValue={user?.aboutme}
                         />
                       </div>
                       <p className="mt-2 text-sm text-gray-500">
@@ -200,4 +214,32 @@ export default function Profile() {
         </div>
       </>
     )
+  }
 }
+
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx)
+  if (session) {
+    const email = session.user?.email
+    const res = await User.findOne({ email })
+    // const res = await fetch(
+    //   `http://127.0.0.1:3000/api/users/62cb33ef1a65074097c3ff74`
+    // )
+    // const result = await res.json()
+    // const user = result.data
+    const user = JSON.parse(JSON.stringify(res))
+    return {
+      props: { user },
+    }
+  } else {
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    }
+  }
+}
+
+Profile.auth = true
+export default Profile

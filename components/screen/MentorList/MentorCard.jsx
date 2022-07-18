@@ -1,7 +1,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect } from 'react'
 
-export default function MentorCard({ mentor }) {
+export default function MentorCard({ mentor, onDelete }) {
   return (
     <div className="w-full sm:w-1/2 md:w-1/2 xl:w-1/3 p-6">
       <div className="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden">
@@ -29,7 +30,7 @@ export default function MentorCard({ mentor }) {
               {mentor.firstname} {mentor.lastname}
             </h2>
             <span>
-              {mentor.job[0].substring(
+              {mentor.job[0]?.substring(
                 mentor.job[0].lastIndexOf('@') + 1,
                 mentor.job[0].length
               )}
@@ -53,7 +54,7 @@ export default function MentorCard({ mentor }) {
               </svg>
             </span>
             <span className="text-sm">
-              {mentor.job[0].substring(0, mentor.job[0].lastIndexOf('@'))}
+              {mentor.job[0]?.substring(0, mentor.job[0].lastIndexOf('@'))}
             </span>
           </div>
           <div className="inline-flex w-full">
@@ -77,6 +78,11 @@ export default function MentorCard({ mentor }) {
             </span>
             {mentor.skills ? mentor.skills.join(', ') : null}
           </div>
+          {/* <div className="text-red-700">
+            <Link href={'/'}>
+              <a onClick={(e) => onDelete(e, mentor._id)}>Delete</a>
+            </Link>
+          </div> */}
         </div>
       </div>
     </div>

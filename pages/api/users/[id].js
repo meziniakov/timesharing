@@ -1,6 +1,5 @@
 import dbConnect from '../../../lib/db'
-import Mentors from '../../../models/Mentors.js'
-import Users from '../../../models/userModel'
+import Users from '../../../models/User'
 
 export default async function handler(req, res) {
   const {
@@ -11,7 +10,7 @@ export default async function handler(req, res) {
   await dbConnect()
 
   switch (method) {
-    case 'GET' /* Get a model by its ID */:
+    case 'GET':
       try {
         const mentor = await Users.findById(id)
         if (!mentor) {
@@ -23,7 +22,7 @@ export default async function handler(req, res) {
       }
       break
 
-    case 'PUT' /* Edit a model by its ID */:
+    case 'PUT':
       try {
         const mentor = await Users.findByIdAndUpdate(id, req.body, {
           new: true,
@@ -38,7 +37,7 @@ export default async function handler(req, res) {
       }
       break
 
-    case 'DELETE' /* Delete a model by its ID */:
+    case 'DELETE':
       try {
         const deletedMentor = await Users.deleteOne({ _id: id })
         if (!deletedMentor) {

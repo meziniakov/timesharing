@@ -1,26 +1,8 @@
+import { getSession } from 'next-auth/react'
 import Head from 'next/head'
 import Image from 'next/image'
 
-export default function MentorPage({ data }) {
-  const handleSendMessage = async (e) => {
-    e.preventDefault()
-    let data = {
-      telegramUserID: 982423117,
-      text: 'Привет. Это тестовое сообщение со смайлом 🤪',
-      parseMode: 'html',
-    }
-    const url = `${process.env.URL_API}/sendMessage`
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    const result = await res.json()
-    console.log(result)
-  }
-
+export default function MentorEditPage({ data }) {
   return (
     <>
       <Head>
@@ -62,7 +44,29 @@ export default function MentorPage({ data }) {
               />
             </div>
             <h3 className="text-center text-lg font-bold">
-              {data.firstname} {data.lastname}{' '}
+              <input
+                type="text"
+                name="firstname"
+                id="first-name"
+                // onChange={(e) =>
+                //   e.target.value && setFirstname(e.target.value)
+                // }
+                placeholder={data?.firstname}
+                defaultValue={data?.firstname ? data.firstname : ''}
+                autoComplete="given-name"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              />
+              <input
+                type="text"
+                name="lastname"
+                // onChange={(e) =>
+                //   e.target.value && setFirstname(e.target.value)
+                // }
+                placeholder={data?.lastname}
+                defaultValue={data?.lastname ? data.lastname : ''}
+                autoComplete="given-name"
+                className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+              />
             </h3>
             <p className="text-base font-light text-center text mb-0">
               {data.job}
@@ -107,7 +111,12 @@ export default function MentorPage({ data }) {
         <div className="lg:col-span-2 grid grid-cols-1 gap-7">
           <div className="col-span-2 rounded-xl p-7 border ">
             <h3 className="text-xl font-bold">О себе</h3>
-            <p>{data.aboutme}</p>
+            <textarea
+              name="about"
+              rows={3}
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+              defaultValue={data?.aboutme}
+            />
             <h3 className="text-xl font-bold">Компетенции</h3>
             {data.skills.map((el) => (
               <button
@@ -120,12 +129,30 @@ export default function MentorPage({ data }) {
           </div>
           <div className="h-max col-span-2 rounded-xl p-7 border">
             <h3 className="text-xl font-bold">С чем помогу</h3>
+            <textarea
+              name="pomogu"
+              rows={3}
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+              // defaultValue={data?.pomogu}
+            />
           </div>
           <div className="h-max col-span-2 rounded-xl p-7 border">
             <h3 className="text-xl font-bold">Опыт (резюме, портфолио)</h3>
+            <textarea
+              name="rezume"
+              rows={3}
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+              // defaultValue={data?.pomogu}
+            />
           </div>
           <div className="h-max col-span-2 rounded-xl p-7 border">
             <h3 className="text-xl font-bold">Места работы</h3>
+            <textarea
+              name="rabota"
+              rows={3}
+              className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+              // defaultValue={data?.pomogu}
+            />
           </div>
           <div className="h-max col-span-2 rounded-xl p-7 border">
             <h3 className="text-xl font-bold">Отзывы</h3>
@@ -142,8 +169,18 @@ export default function MentorPage({ data }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const { _id } = ctx.params
-  const res = await fetch(`http://127.0.0.1:3000/api/users/${_id}`)
-  const { data } = await res.json()
-  return { props: { data: JSON.parse(JSON.stringify(data)) } }
+  const session = await getSession(ctx)
+  if (session) {
+    const { _id } = ctx.params
+    const res = await fetch(`http://127.0.0.1:3000/api/users/${_id}`)
+    const { data } = await res.json()
+    return { props: { data: JSON.parse(JSON.stringify(data)) } }
+  } else {
+    return {
+      redirect: {
+        destination: '/auth/signin',
+        permanent: false,
+      },
+    }
+  }
 }

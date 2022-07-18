@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import MentorCard from '../components/screen/MentorList/MentorCard'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Home({ data }) {
   const mentorPerRow = 9
@@ -11,6 +11,14 @@ export default function Home({ data }) {
     setNext(next + mentorPerRow)
   }
 
+  // const handleDelete = async (e, id) => {
+  //   e.preventDefault()
+  //   const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+  //     method: 'DELETE',
+  //   })
+  //   const result = await res.json()
+  // }
+
   return (
     <>
       <Head>
@@ -20,7 +28,7 @@ export default function Home({ data }) {
       </Head>
       {/* <Main />
       <SearchSection data={data} /> */}
-      <section className="py-14 bg-red-200" dataSection="hero">
+      <section className="py-14 bg-red-200">
         <div className="text-center lg:w-3/4 mx-auto">
           <h1 className="text-5xl font-semibold">Найди своего ментора</h1>
           <p className="lg:w-3/4 mx-auto">
@@ -44,7 +52,11 @@ export default function Home({ data }) {
           {data ? (
             <div className="flex flex-wrap -mx-3">
               {data.slice(0, next).map((mentor, i) => (
-                <MentorCard key={i} mentor={mentor} />
+                <MentorCard
+                  key={i}
+                  mentor={mentor}
+                  // onDelete={handleDelete}
+                />
               ))}
             </div>
           ) : (
@@ -69,7 +81,7 @@ export default function Home({ data }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const res = await fetch(`http://127.0.0.1/api/users`)
+  const res = await fetch(`http://127.0.0.1:3000/api/users`)
   const { data } = await res.json()
   return { props: { data } }
 }

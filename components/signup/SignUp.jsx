@@ -1,16 +1,20 @@
 import { LockClosedIcon } from '@heroicons/react/solid'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
 import { useState } from 'react'
 
 const SignUp = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-
+  const { replace } = useRouter()
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setEmail(e.target.email.value)
-    setPassword(e.target.password.value)
+    const data = {
+      email: e.target.email.value,
+      password: e.target.password.value,
+    }
+
+    const JSONData = JSON.stringify(data)
 
     const url = `${process.env.URL_API}/_auth/login`
     const res = await fetch(url, {
@@ -18,10 +22,13 @@ const SignUp = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSONData,
     })
 
     const result = await res.json()
+    if (result) {
+      replace('/about')
+    }
     console.log(result)
   }
 
@@ -45,12 +52,7 @@ const SignUp = () => {
               </Link>
             </p>
           </div>
-          <form
-            onSubmit={(e) => handleSubmit(e)}
-            className="mt-8 space-y-6"
-            action="#"
-            method="POST"
-          >
+          <form onSubmit={(e) => handleSubmit(e)} className="mt-8 space-y-6">
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>

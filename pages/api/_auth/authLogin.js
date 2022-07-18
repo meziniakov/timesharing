@@ -1,6 +1,6 @@
 import dbConnect from '../../../lib/db'
 import Email from '../../../lib/email'
-import User from '../../../models/userModel'
+import User from '../../../models/User'
 
 dbConnect()
 

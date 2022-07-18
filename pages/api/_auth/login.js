@@ -1,5 +1,4 @@
-import dbConnect from '../../../lib/db'
-import User from '../../../models/userModel'
+import User from '../../../models/User'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import Cookies from 'cookies'

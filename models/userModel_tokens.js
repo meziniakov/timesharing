@@ -89,19 +89,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
 
-// Virtual populate
-// userSchema.virtual('purchases', {
-//   ref: 'Purchase',
-//   foreignField: 'user',
-//   localField: '_id',
-// })
-
-// userSchema.pre(/^find/, function (next) {
-//   // This points to the current query
-//   this.find({ active: { $ne: false } })
-//   next()
-// })
-
 userSchema.methods.createAuthToken = function () {
   const authToken = crypto.randomBytes(3).toString('hex')
 
